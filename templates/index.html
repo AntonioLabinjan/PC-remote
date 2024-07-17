@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: rgb(48, 14, 183);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form, .buttons {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #61dafb;
+            color: #282c34;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #21a1f1;
+        }
+        @media (max-width: 600px) {
+            input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            button {
+                width: 100%;
+                padding: 15px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Control Your PC</h1>
+    <form method="POST" action="/command">
+        <label for="cmd">Enter Command:</label>
+        <input type="text" id="cmd" name="cmd">
+        <button type="submit">Execute</button>
+    </form>
+    <div class="buttons">
+        <button type="button" onclick="sendCommand('shutdown /s')">Shutdown</button>
+        <button type="button" onclick="sendCommand('shutdown /r')">Restart</button>
+        <button type="button" onclick="sendCommand('rundll32.exe user32.dll,LockWorkStation')">Lock Screen</button>
+        <button type="button" onclick="sendCommand('start chrome')">Open Chrome</button>
+        <button type="button" onclick="sendCommand('msg * Hello from your phone!')">Show Message</button>
+        <button type="button" onclick="sendCommand('notepad')">Open Notepad</button>
+        <button type="button" onclick="sendCommand('start iexplore')">Open Default Browser</button>
+        <button type="button" onclick="sendCommand('code')">Open VSCode</button>
+    </div>
+
+    <script>
+        function sendCommand(command) {
+            fetch('/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'cmd=' + encodeURIComponent(command),
+            }).then(response => response.text())
+            .then(data => alert(data));
+        }
+    </script>
+</body>
+</html>
